@@ -12,6 +12,23 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    // Check if URL contains a hash to scroll to comments section
+    if (window.location.hash === '#comments') {
+        const commentsSection = document.getElementById('comments');
+        if (commentsSection) {
+            // Use setTimeout to ensure the DOM is fully loaded
+            setTimeout(() => {
+                commentsSection.scrollIntoView({ behavior: 'smooth' });
+                
+                // Focus on comment input if it exists
+                const commentInput = document.getElementById('comment-input');
+                if (commentInput) {
+                    commentInput.focus();
+                }
+            }, 100);
+        }
+    }
+
     // Add smooth scrolling to comment section
     const commentLinks = document.querySelectorAll('.comment-link');
     commentLinks.forEach(link => {
