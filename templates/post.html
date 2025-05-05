@@ -1,0 +1,121 @@
+{{define "content"}}
+<div class="post-card">
+    <h2 class="post-title">{{.Post.Title}}</h2>
+    <div class="post-meta">
+        <span class="post-author">Posted by {{.Post.Username}}</span>
+        <span class="post-date">{{.Post.CreatedAt.Format "Jan 02, 2006 15:04"}}</span>
+    </div>
+    <div class="post-categories">
+        {{range .Post.Categories}}
+            <a href="/posts/category/{{.ID}}" class="category-tag">{{.Name}}</a>
+        {{end}}
+    </div>
+    <div class="post-content">
+        {{.Post.Content}}
+    </div>
+    <div class="post-actions">
+        {{if .User}}
+            <form action="/post/react" method="post" style="display: inline;">
+                <input type="hidden" name="post_id" value="{{.Post.ID}}">
+                <input type="hidden" name="reaction" value="1">
+                <button type="submit" class="reaction-btn {{if eq .Post.UserReaction 1}}reaction-btn-liked{{end}}">
+                    👍 <span class="reaction-count">{{.Post.Likes}}</span>
+                </button>
+            </form>
+            <form action="/post/react" method="post" style="display: inline;">
+                <input type="hidden" name="post_id" value="{{.Post.ID}}">
+                <input type="hidden" name="reaction" value="-1">
+                <button type="submit" class="reaction-btn {{if eq .Post.UserReaction -1}}reaction-btn-disliked{{end}}">
+                    👎 <span class="reaction-count">{{.Post.Dislikes}}</span>
+                </button>
+            </form>
+        {{else}}
+            <span class="reaction-btn">
+                👍 <span class="reaction-count">{{.Post.Likes}}</span>
+            </span>
+            <span class="reaction-btn">
+                👎 <span class="reaction-count">{{.Post.Dislikes}}</span>
+            </span>
+        {{end}}
+    </div>
+</div>
+
+<div id="comments" class="comments-section">
+    <h3 class="comments-title">Comments ({{len .Comments}})</h3>
+    
+    {{if .ErrorMsg}}
+        <div class="error-messages">
+            <p>{{.ErrorMsg}}</p>
+        </div>
+    {{end}}
+    
+    {{if .User}}
+        <div class="comment-form-container">
+            <form id="comment-form" action="/comment/create" method="post">
+                <input type="hidden" name="post_id" value="{{.Post.ID}}">
+                <div class="form-group">
+                    <textarea id="comment-input" name="content" class="form-control" rows="4" placeholder="Write a comment..." required></textarea>
+                    <div id="comment-preview" style="display: none;" class="form-control"></div>
+                </div>
+                <div class="form-group">
+                    <button type="button" id="preview-toggle" class="btn btn-secondary">Preview</button>
+                    <button type="submit" class="btn btn-primary">Submit Comment</button>
+                </div>
+            </form>
+        </div>
+    {{else}}
+        <div class="comment-login-prompt">
+            <p><a href="/login">Login</a> to leave a comment.</p>
+        </div>
+    {{end}}
+    
+    {{if .Comments}}
+        {{range .Comments}}
+            <div class="comment-card">
+                <div class="comment-meta">
+                    <span class="comment-author">{{.Username}}</span>
+                    <span class="comment-date">{{.CreatedAt.Format "Jan 02, 2006 15:04"}}</span>
+                </div>
+                <div class="comment-content">
+                    {{.Content}}
+                </div>
+                <div class="comment-actions">
+                    {{if $.User}}
+                        <form action="/comment/react" method="post" style="display: inline;">
+                            <input type="hidden" name="comment_id" value="{{.ID}}">
+                            <input type="hidden" name="post_id" value="{{.PostID}}">
+                            <input type="hidden" name="reaction" value="1">
+                            <button type="submit" class="reaction-btn {{if eq .UserReaction 1}}reaction-btn-liked{{end}}">
+                                👍 <span class="reaction-count">{{.Likes}}</span>
+                            </button>
+                        </form>
+                        <form action="/comment/react" method="post" style="display: inline;">
+                            <input type="hidden" name="comment_id" value="{{.ID}}">
+                            <input type="hidden" name="post_id" value="{{.PostID}}">
+                            <input type="hidden" name="reaction" value="-1">
+                            <button type="submit" class="reaction-btn {{if eq .UserReaction -1}}reaction-btn-disliked{{end}}">
+                                👎 <span class="reaction-count">{{.Dislikes}}</span>
+                            </button>
+                        </form>
+                    {{else}}
+                        <span class="reaction-btn">
+                            👍 <span class="reaction-count">{{.Likes}}</span>
+                        </span>
+                        <span class="reaction-btn">
+                            👎 <span class="reaction-count">{{.Dislikes}}</span>
+                        </span>
+                    {{end}}
+                </div>
+            </div>
+        {{end}}
+    {{else}}
+        <div class="no-comments">
+            <p>No comments yet. Be the first to comment!</p>
+        </div>
+    {{end}}
+</div>
+
+<div class="back-link">
+    <a href="/" class="btn btn-secondary">Back to Posts</a>
+</div>
+{{end}}
