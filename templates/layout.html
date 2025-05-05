@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forum</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <nav>
+        <div class="nav-container">
+            <a href="/" class="logo">Forum</a>
+            <div class="nav-links">
+                {{if .User}}
+                    <a href="/post/create">Create Post</a>
+                    <a href="/logout">Logout</a>
+                {{else}}
+                    <a href="/login">Login</a>
+                    <a href="/register">Register</a>
+                {{end}}
+            </div>
+        </div>
+    </nav>
+    <main>
+        {{template "content" .}}
+    </main>
+    <script src="/static/js/main.js"></script>
+</body>
+</html>
