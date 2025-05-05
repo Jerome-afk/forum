@@ -407,6 +407,30 @@ footer {
   margin-bottom: 0;
 }
 
+/* Error Page Styles */
+.error-container {
+  text-align: center;
+  padding: 3rem 1rem;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.error-container h1 {
+  font-size: 2.5rem;
+  color: var(--primary-color);
+  margin-bottom: 1.5rem;
+}
+
+.error-container p {
+  font-size: 1.1rem;
+  margin-bottom: 1.5rem;
+  color: var(--text-color);
+}
+
+.error-actions {
+  margin-top: 2rem;
+}
+
 /* Responsive Adjustments */
 @media (max-width: 768px) {
   .header-content {
