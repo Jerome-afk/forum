@@ -1,0 +1,84 @@
+{{define "content"}}
+<div class="filter-section">
+    <h2 class="filter-title">{{if .Title}}{{.Title}}{{else}}All Posts{{end}}</h2>
+    <div class="filter-options">
+        <div class="filter-option">
+            <select id="category-filter" class="filter-select">
+                <option value="">All Categories</option>
+                {{range .Categories}}
+                    <option value="{{.ID}}" {{if eq $.SelectedCategoryID .ID}}selected{{end}}>{{.Name}}</option>
+                {{end}}
+            </select>
+        </div>
+        {{if .User}}
+            <div class="filter-option">
+                <a href="/posts/my" class="btn btn-secondary">My Posts</a>
+            </div>
+            <div class="filter-option">
+                <a href="/posts/liked" class="btn btn-secondary">Liked Posts</a>
+            </div>
+        {{end}}
+    </div>
+</div>
+
+{{if .Posts}}
+    {{range .Posts}}
+        <div class="post-card">
+            <h2 class="post-title"><a href="/post/{{.ID}}">{{.Title}}</a></h2>
+            <div class="post-meta">
+                <span class="post-author">Posted by {{.Username}}</span>
+                <span class="post-date">{{.CreatedAt.Format "Jan 02, 2006 15:04"}}</span>
+            </div>
+            <div class="post-categories">
+                {{range .Categories}}
+                    <a href="/posts/category/{{.ID}}" class="category-tag">{{.Name}}</a>
+                {{end}}
+            </div>
+            <div class="post-content">
+                {{if gt (len .Content) 300}}
+                    {{slice .Content 0 300}}...
+                    <a href="/post/{{.ID}}">Read more</a>
+                {{else}}
+                    {{.Content}}
+                {{end}}
+            </div>
+            <div class="post-actions">
+                {{if $.User}}
+                    <form action="/post/react" method="post" style="display: inline;">
+                        <input type="hidden" name="post_id" value="{{.ID}}">
+                        <input type="hidden" name="reaction" value="1">
+                        <button type="submit" class="reaction-btn {{if eq .UserReaction 1}}reaction-btn-liked{{end}}">
+                            👍 <span class="reaction-count">{{.Likes}}</span>
+                        </button>
+                    </form>
+                    <form action="/post/react" method="post" style="display: inline;">
+                        <input type="hidden" name="post_id" value="{{.ID}}">
+                        <input type="hidden" name="reaction" value="-1">
+                        <button type="submit" class="reaction-btn {{if eq .UserReaction -1}}reaction-btn-disliked{{end}}">
+                            👎 <span class="reaction-count">{{.Dislikes}}</span>
+                        </button>
+                    </form>
+                {{else}}
+                    <span class="reaction-btn">
+                        👍 <span class="reaction-count">{{.Likes}}</span>
+                    </span>
+                    <span class="reaction-btn">
+                        👎 <span class="reaction-count">{{.Dislikes}}</span>
+                    </span>
+                {{end}}
+                <a href="/post/{{.ID}}#comments" class="reaction-btn comment-link">
+                    💬 Comments
+                </a>
+            </div>
+        </div>
+    {{end}}
+{{else}}
+    <div class="post-card">
+        <p>No posts found. Be the first to create a post!</p>
+    </div>
+{{end}}
+
+{{if .User}}
+    <a href="/post/create" class="new-post-btn" title="Create New Post">+</a>
+{{end}}
+{{end}}
