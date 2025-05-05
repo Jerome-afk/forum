@@ -1,29 +1,49 @@
+{{ define "layout" }}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Forum</title>
+    <title>{{if .Title}}{{.Title}} - {{end}}Forum</title>
     <link rel="stylesheet" href="/static/css/style.css">
 </head>
 <body>
-    <nav>
-        <div class="nav-container">
-            <a href="/" class="logo">Forum</a>
-            <div class="nav-links">
-                {{if .User}}
-                    <a href="/post/create">Create Post</a>
-                    <a href="/logout">Logout</a>
-                {{else}}
-                    <a href="/login">Login</a>
-                    <a href="/register">Register</a>
-                {{end}}
+    <header>
+        <div class="container header-content">
+            <div class="logo">
+                <a href="/">Forum</a>
             </div>
+            <nav>
+                <ul>
+                    <li><a href="/">Home</a></li>
+                    {{if .User}}
+                        <li><a href="/posts/my">My Posts</a></li>
+                        <li><a href="/posts/liked">Liked Posts</a></li>
+                        <li>
+                            <form action="/logout" method="post" style="display: inline;">
+                                <button type="submit" style="background: none; border: none; color: white; cursor: pointer;">Logout</button>
+                            </form>
+                        </li>
+                    {{else}}
+                        <li><a href="/login">Login</a></li>
+                        <li><a href="/register">Register</a></li>
+                    {{end}}
+                </ul>
+            </nav>
         </div>
-    </nav>
-    <main>
+    </header>
+
+    <main class="container">
         {{template "content" .}}
     </main>
+
+    <footer>
+        <div class="container footer-content">
+            <p>&copy; {{.CurrentYear}} Forum. All rights reserved.</p>
+        </div>
+    </footer>
+
     <script src="/static/js/main.js"></script>
 </body>
 </html>
+{{ end }}
