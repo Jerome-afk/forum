@@ -1,12 +1,12 @@
 package handlers
 
 import (
-        "context"
-        "database/sql"
-        "net/http"
+	"context"
+	"database/sql"
+	"net/http"
 
-        "forum/models"
-        "forum/utils"
+	"forum/models"
+	"forum/utils"
 )
 
 // Context keys
