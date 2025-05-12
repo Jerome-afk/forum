@@ -1,8 +1,9 @@
 package handlers
 
 import (
+	"fmt"
 	"net/http"
-	"strings"
+	// "strings"
 )
 
 // StaticMiddleware handles access to static files
@@ -11,8 +12,9 @@ func StaticMiddleware(next http.Handler) http.Handler {
 		path := "/" + r.URL.Path
 
 		// Block direct access to /static/, /static/css/, /static/js/
-		if path == "/" || strings.HasPrefix(path, "/css/") || strings.HasPrefix(path, "/js/") {
+		if path == "/" || path == "/css/" || path == "/js/" {
 			w.WriteHeader(http.StatusNotFound)
+			fmt.Println("Error")
 			renderTemplate(w, "404.html", nil)
 			return
 		}
