@@ -16,7 +16,7 @@ import (
 
 func main() {
 	// Database initialization
-	db, err := database.InitDB("./forum.db")
+	db, err := database.InitDB("./data/forum.db")
 	if err != nil {
 		log.Fatalf("Failed to initialize database: %v", err)
 	}
@@ -135,7 +135,7 @@ func main() {
 	}()
 
 	// Start server
-	port := "5000" // Changed to use port 5000
+	port := "3000" // Changed to use port 5000
 	server := &http.Server{
 		Addr:         "0.0.0.0:" + port,
 		Handler:      mux,
