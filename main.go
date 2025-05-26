@@ -16,7 +16,7 @@ import (
 
 func main() {
 	// Database initialization
-	db, err := database.InitDB("./data/forum.db")
+	db, err := database.InitDB("./forum.db")
 	if err != nil {
 		log.Fatalf("Failed to initialize database: %v", err)
 	}
