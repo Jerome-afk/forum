@@ -8,6 +8,7 @@ import (
 	"net/http/httptest"
 	"net/url"
 	"os"
+	"strconv"
 	"strings"
 	"testing"
 
@@ -114,7 +115,7 @@ func TestGetPostHandler(t *testing.T) {
 	}
 
 	// Test GET request to view a post
-	req := createRequestWithDB("GET", "/post?id="+string(postID), nil, db)
+	req := createRequestWithDB("GET", "/post?id="+strconv.FormatInt(postID, 10), nil, db)
 	rr := httptest.NewRecorder()
 
 	// Add post ID to request context
@@ -341,7 +342,7 @@ func TestReactPostHandler(t *testing.T) {
 
 	// Test liking a post
 	formData := url.Values{}
-	formData.Set("post_id", string(postID))
+	formData.Set("post_id", strconv.FormatInt(postID, 10))
 	formData.Set("reaction", "1") // 1 for like
 
 	req := createAuthenticatedRequest("POST", "/react-post", bytes.NewBufferString(formData.Encode()), db, userID)
@@ -365,7 +366,7 @@ func TestReactPostHandler(t *testing.T) {
 
 	// Test disliking the same post (changing reaction)
 	formData = url.Values{}
-	formData.Set("post_id", string(postID))
+	formData.Set("post_id", strconv.FormatInt(postID, 10))
 	formData.Set("reaction", "-1") // -1 for dislike
 
 	req = createAuthenticatedRequest("POST", "/react-post", bytes.NewBufferString(formData.Encode()), db, userID)
@@ -388,7 +389,7 @@ func TestReactPostHandler(t *testing.T) {
 
 	// Test removing reaction by submitting the same reaction again
 	formData = url.Values{}
-	formData.Set("post_id", string(postID))
+	formData.Set("post_id", strconv.FormatInt(postID, 10))
 	formData.Set("reaction", "-1") // -1 for dislike (same as current)
 
 	req = createAuthenticatedRequest("POST", "/react-post", bytes.NewBufferString(formData.Encode()), db, userID)
@@ -412,7 +413,7 @@ func TestReactPostHandler(t *testing.T) {
 
 	// Test without authentication
 	formData = url.Values{}
-	formData.Set("post_id", string(postID))
+	formData.Set("post_id", strconv.FormatInt(postID, 10))
 	formData.Set("reaction", "1")
 
 	req = createRequestWithDB("POST", "/react-post", bytes.NewBufferString(formData.Encode()), db)

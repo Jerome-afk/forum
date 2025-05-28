@@ -7,6 +7,7 @@ import (
 	"net/http/httptest"
 	"net/url"
 	"os"
+	"strconv"
 	"strings"
 	"testing"
 
@@ -71,7 +72,7 @@ func TestCreateCommentHandler(t *testing.T) {
 	// Test successful comment creation
 	formData := url.Values{}
 	formData.Set("content", "This is a test comment.")
-	formData.Set("post_id", string(postID))
+	formData.Set("post_id", strconv.FormatInt(postID, 10))
 
 	req := createAuthenticatedRequest("POST", "/comment", bytes.NewBufferString(formData.Encode()), db, userID)
 	rr := httptest.NewRecorder()
@@ -96,7 +97,7 @@ func TestCreateCommentHandler(t *testing.T) {
 	// Test comment creation with empty content
 	formData = url.Values{}
 	formData.Set("content", "")
-	formData.Set("post_id", string(postID))
+	formData.Set("post_id", strconv.FormatInt(postID, 10))
 
 	req = createAuthenticatedRequest("POST", "/comment", bytes.NewBufferString(formData.Encode()), db, userID)
 	rr = httptest.NewRecorder()
@@ -113,7 +114,7 @@ func TestCreateCommentHandler(t *testing.T) {
 	// Test without authentication
 	formData = url.Values{}
 	formData.Set("content", "This is another test comment.")
-	formData.Set("post_id", string(postID))
+	formData.Set("post_id", strconv.FormatInt(postID, 10))
 
 	req = createRequestWithDB("POST", "/comment", bytes.NewBufferString(formData.Encode()), db)
 	rr = httptest.NewRecorder()
@@ -144,9 +145,9 @@ func TestReactCommentHandler(t *testing.T) {
 
 	// Test liking a comment
 	formData := url.Values{}
-	formData.Set("comment_id", string(commentID))
+	formData.Set("comment_id", strconv.FormatInt(commentID, 10))
 	formData.Set("reaction", "1") // 1 for like
-	formData.Set("post_id", string(postID))
+	formData.Set("post_id", strconv.FormatInt(postID, 10))
 
 	req := createAuthenticatedRequest("POST", "/react-comment", bytes.NewBufferString(formData.Encode()), db, userID)
 	rr := httptest.NewRecorder()
@@ -170,9 +171,9 @@ func TestReactCommentHandler(t *testing.T) {
 
 	// Test disliking the same comment (changing reaction)
 	formData = url.Values{}
-	formData.Set("comment_id", string(commentID))
+	formData.Set("comment_id", strconv.FormatInt(commentID, 10))
 	formData.Set("reaction", "-1") // -1 for dislike
-	formData.Set("post_id", string(postID))
+	formData.Set("post_id", strconv.FormatInt(postID, 10))
 
 	req = createAuthenticatedRequest("POST", "/react-comment", bytes.NewBufferString(formData.Encode()), db, userID)
 	rr = httptest.NewRecorder()
@@ -195,9 +196,9 @@ func TestReactCommentHandler(t *testing.T) {
 
 	// Test removing reaction by submitting the same reaction again
 	formData = url.Values{}
-	formData.Set("comment_id", string(commentID))
+	formData.Set("comment_id", strconv.FormatInt(commentID, 10))
 	formData.Set("reaction", "-1") // -1 for dislike (same as current)
-	formData.Set("post_id", string(postID))
+	formData.Set("post_id", strconv.FormatInt(postID, 10))
 
 	req = createAuthenticatedRequest("POST", "/react-comment", bytes.NewBufferString(formData.Encode()), db, userID)
 	rr = httptest.NewRecorder()
@@ -221,9 +222,9 @@ func TestReactCommentHandler(t *testing.T) {
 
 	// Test without authentication
 	formData = url.Values{}
-	formData.Set("comment_id", string(commentID))
+	formData.Set("comment_id", strconv.FormatInt(commentID, 10))
 	formData.Set("reaction", "1")
-	formData.Set("post_id", string(postID))
+	formData.Set("post_id", strconv.FormatInt(postID, 10))
 
 	req = createRequestWithDB("POST", "/react-comment", bytes.NewBufferString(formData.Encode()), db)
 	rr = httptest.NewRecorder()
